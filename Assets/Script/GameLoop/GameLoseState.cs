@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Pixelplacement;
 
 public class GameLoseState : State
 {
-    // Start is called before the first frame update
-    void Start()
+    public void ReloadScene()
     {
-
+        SceneManager.LoadScene("Main");
     }
 }

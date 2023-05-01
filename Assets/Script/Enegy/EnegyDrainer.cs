@@ -23,11 +23,17 @@ public class EnegyDrainer : MonoBehaviour
         OnEneryStartDraining?.Invoke(maxEnergy, energy);
         while (energy >= 0)
         {
-            energy -= drainSpeed * Time.deltaTime * Time.time;
+            energy -= drainSpeed * Time.deltaTime;
             OnEnergyDraining?.Invoke(energy);
             yield return null;
         }
 
         OnEnergyDrained?.Invoke();
+    }
+
+    public void AddEnegy(float value)
+    {
+        energy += value;
+        energy = Mathf.Clamp(energy, 0, maxEnergy);
     }
 }

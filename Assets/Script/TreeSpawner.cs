@@ -5,17 +5,22 @@ using KpModules.ObjectPooling;
 
 public class TreeSpawner : MonoBehaviour
 {
-    public Tree treePrefab;
-    public DynamicPool<Tree> treePool;
+    private Dictionary<Tree, DynamicPool<Tree>> treeDictionary;
     public Vector3 spawnPoint;
+    public Tree[] treePrefabs;
 
     private void Awake()
     {
-        treePool = new DynamicPool<Tree>(treePrefab, Vector3.zero, 10, 100);
-        treePool.CreateObjects(10);
+        treeDictionary = new Dictionary<Tree, DynamicPool<Tree>>();
+        for (int i = 0; i < treePrefabs.Length; i++)
+        {
+            treeDictionary.Add(treePrefabs[i], new DynamicPool<Tree>(treePrefabs[i], Vector3.zero, 10, 100));
+            treeDictionary[treePrefabs[i]].CreateObjects(10);
+        }
     }
 
-    private void Start() {
+    public void StartSpawning()
+    {
         StartCoroutine(SpawnTreeRoutine());
     }
 
@@ -24,7 +29,8 @@ public class TreeSpawner : MonoBehaviour
         Tree tree;
         while (true)
         {
-            tree = treePool.GetObject();
+            Tree prefab = treePrefabs.Random();
+            tree = treeDictionary[prefab].GetObject();
             tree.transform.position = spawnPoint;
             tree.gameObject.SetActive(true);
             yield return new WaitForSeconds(4);
